@@ -1,177 +1,74 @@
+
 <!doctype html>
 <html lang="bn">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>My Site — Powered by GitHub Pages + Blogger</title>
-  <style>
-    :root { --w: 860px; }
-    *{box-sizing:border-box}
-    body{font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Apple Color Emoji", "Segoe UI Emoji"; margin:0; background:#0b0d10; color:#e9eef5}
-    a{color:inherit; text-decoration:none}
-    img{max-width:100%; height:auto; border-radius:12px}
-    header{position:sticky; top:0; backdrop-filter: blur(8px); background:#0b0d10cc; border-bottom:1px solid #1c232a}
-    nav{max-width:var(--w); margin:0 auto; display:flex; gap:12px; align-items:center; padding:14px 16px}
-    nav .brand{font-weight:700; letter-spacing:.3px}
-    nav .sp{flex:1}
-    nav .filters a{opacity:.75; padding:8px 12px; border:1px solid #1f2730; border-radius:999px}
-    nav .filters a.active, nav .filters a:hover{opacity:1; border-color:#2e4358; background:#121820}
-    .wrap{max-width:var(--w); margin:20px auto; padding:0 16px}
-    .hero{padding:18px 16px; background:#0e1319; border:1px solid #1b242d; border-radius:16px}
-    .grid{display:grid; gap:18px; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); margin-top:16px}
-    .card{padding:16px; border:1px solid #1b242d; border-radius:16px; background:#0e1319; display:flex; flex-direction:column; gap:12px}
-    .meta{font-size:.85rem; opacity:.75}
-    .title{font-weight:700; font-size:1.05rem}
-    .excerpt{opacity:.9}
-    .btn{display:inline-block; margin-top:6px; padding:10px 12px; border:1px solid #243546; border-radius:10px}
-    footer{opacity:.7; font-size:.9rem; text-align:center; padding:28px 0}
-    .empty{opacity:.7; padding:24px; text-align:center; border:1px dashed #2a3642; border-radius:14px}
-    .pager{display:flex; gap:10px; align-items:center; justify-content:center; margin:22px 0}
-    .pager button{padding:10px 14px; background:#121820; color:#e9eef5; border:1px solid #223140; border-radius:10px; cursor:pointer}
-    .pager button:disabled{opacity:.5; cursor:not-allowed}
-  </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Anonbar — Community Feed</title>
+  <meta name="description" content="Anonbar community — GitHub Pages theme pulling posts from Blogger.">
+  <link rel="preload" href="assets/img/logo.svg" as="image">
+  <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-  <header>
-    <nav>
-      <a class="brand" href="/">My Site</a>
+  <header class="header">
+    <div class="container nav">
+      <a class="brand" href="./"><img src="assets/img/logo.svg" alt=""><span>Anonbar</span></a>
       <div class="sp"></div>
-      <div class="filters">
-        <!-- Label filters — edit/add as you like -->
-        <a href="?" id="flt-all">All</a>
-        <a href="?label=News">News</a>
-        <a href="?label=Updates">Updates</a>
-        <a href="?label=Tutorials">Tutorials</a>
-      </div>
-    </nav>
+      <form class="search desktop" role="search" onsubmit="event.preventDefault(); location.href='?label='+encodeURIComponent(this.q.value)">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="7"></circle><path d="m21 21-4.3-4.3"></path></svg>
+        <input name="q" type="search" placeholder="Filter by label…" aria-label="Filter by label">
+        <span class="kbd">/</span>
+      </form>
+      <button class="btn mobile theme-toggle"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3a9 9 0 1 0 9 9"></path></svg>Theme</button>
+      <a class="btn desktop" href="https://www.blogger.com/blog/posts" target="_blank" rel="noopener">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4h16v16H4z"></path><path d="M8 8h8M8 12h8M8 16h5"></path></svg>
+        New post
+      </a>
+    </div>
   </header>
 
-  <main class="wrap">
-    <section class="hero">
-      <h1 style="margin:0 0 6px 0">Live posts from Blogger</h1>
-      <p style="margin:0; opacity:.8">Site runs on GitHub Pages. Posts are pulled at runtime from your Blogger feed.</p>
-    </section>
+  <main class="container">
+    <div class="grid">
+      <aside class="sidebar">
+        <div class="card section">
+          <h3>Explore</h3>
+          <div class="tags">
+            <a class="tag" data-all="1" href="./">All</a>
+            <a class="tag" href="?label=News">#News</a>
+            <a class="tag" href="?label=Updates">#Updates</a>
+            <a class="tag" href="?label=Tutorials">#Tutorials</a>
+            <a class="tag" href="?label=Release">#Release</a>
+            <a class="tag" href="?label=Community">#Community</a>
+          </div>
+        </div>
+        <div class="card section">
+          <h3>Saved</h3>
+          <div id="savedList" class="tags" aria-live="polite">আপনার সেভকৃত পোস্টগুলো এখানে দেখাবে</div>
+        </div>
+      </aside>
 
-    <div id="posts" class="grid" aria-live="polite" aria-busy="true"></div>
-    <div id="empty" class="empty" style="display:none">কোনো পোস্ট পাওয়া যায়নি</div>
+      <section class="feed">
+        <div class="section card" style="display:flex;align-items:center;gap:10px">
+          <div style="flex:1">
+            <div class="badge">Community</div>
+            <h1 style="margin:.2em 0 .1em 0">Live posts from Blogger</h1>
+            <div style="opacity:.8">GitHub Pages থিম—Anonbar লুক ও কমিউনিটি ফিল।</div>
+          </div>
+          <button class="btn theme-toggle desktop"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3a9 9 0 1 0 9 9"></path></svg>Theme</button>
+        </div>
 
-    <div class="pager">
-      <button id="prevBtn">Prev</button>
-      <span id="pageInfo"></span>
-      <button id="nextBtn">Next</button>
+        <div class="feed-list" aria-live="polite"></div>
+        <div class="card section empty hide">কোনো পোস্ট পাওয়া যায়নি</div>
+      </section>
     </div>
   </main>
 
-  <footer>
-    <div class="wrap">© <span id="y"></span> · GitHub Pages + Blogger</div>
+  <footer class="footer">
+    <div class="container">© <span id="y"></span> · Anonbar community theme for GitHub Pages + Blogger</div>
   </footer>
 
-  <script>
-    // ================== SETUP ==================
-    // Replace with your Blogger public URL
-    const BLOG_URL = "https://anonbar.blogspot.com/"; // e.g. https://mybrandblog.blogspot.com
+  <div class="toast" role="status" aria-live="polite"></div>
 
-    // How many posts per page
-    const PAGE_SIZE = 9;
-
-    // ===========================================
-    const qs = new URLSearchParams(location.search);
-    const label = qs.get('label') || '';
-    let startIndex = Number(qs.get('start')) || 1; // 1-based
-
-    // highlight active filter
-    document.querySelectorAll('.filters a').forEach(a => {
-      const isAll = !label && a.id === 'flt-all';
-      const isMatch = label && a.href.includes(`label=${encodeURIComponent(label)}`);
-      if (isAll || isMatch) a.classList.add('active');
-    });
-
-    const postsEl = document.getElementById('posts');
-    const emptyEl = document.getElementById('empty');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const pageInfo = document.getElementById('pageInfo');
-    document.getElementById('y').textContent = new Date().getFullYear();
-
-    function setBusy(b=true){ postsEl.setAttribute('aria-busy', b); }
-
-    // JSONP loader to bypass CORS cleanly with Blogger
-    function loadBloggerFeed({ label = '', startIndex = 1, maxResults = PAGE_SIZE }) {
-      setBusy(true);
-      // Remove any previous JSONP <script>
-      document.querySelectorAll('script[data-jsonp]')?.forEach(s => s.remove());
-
-      const cbName = 'onBloggerFeed';
-      window[cbName] = (data) => {
-        renderFeed(data);
-        setBusy(false);
-      };
-
-      let src = `${BLOG_URL.replace(/\/$/, '')}/feeds/posts/default?alt=json-in-script&orderby=published&max-results=${maxResults}&start-index=${startIndex}&callback=${cbName}`;
-      if (label) src += `&category=${encodeURIComponent(label)}`;
-
-      const s = document.createElement('script');
-      s.src = src; s.async = true; s.setAttribute('data-jsonp','1');
-      s.onerror = () => { setBusy(false); postsEl.innerHTML = ''; emptyEl.style.display = 'block'; };
-      document.body.appendChild(s);
-    }
-
-    function stripHtml(html) {
-      const tmp = document.createElement('div');
-      tmp.innerHTML = html || '';
-      // remove scripts/styles for safety
-      tmp.querySelectorAll('script,style,noscript').forEach(e=>e.remove());
-      return tmp.textContent.trim();
-    }
-
-    function firstImageFrom(html, fallback = ''){
-      const tmp = document.createElement('div'); tmp.innerHTML = html || '';
-      const img = tmp.querySelector('img');
-      return img ? img.src : fallback;
-    }
-
-    function renderFeed(json){
-      postsEl.innerHTML = '';
-      const entries = json?.feed?.entry || [];
-      if (!entries.length){ emptyEl.style.display = 'block'; pageInfo.textContent = ''; return; }
-      emptyEl.style.display = 'none';
-
-      entries.forEach(entry => {
-        const title = entry.title?.$t || 'Untitled';
-        const contentHtml = entry.content?.$t || entry.summary?.$t || '';
-        const text = stripHtml(contentHtml);
-        const excerpt = text.length > 160 ? text.slice(0, 160) + '…' : text;
-        const date = new Date(entry.published?.$t || entry.updated?.$t || Date.now());
-        const linkObj = (entry.link || []).find(l => l.rel === 'alternate');
-        const href = linkObj?.href || '#';
-        const labelTerms = (entry.category || []).map(c => c.term);
-        const thumb = entry['media$thumbnail']?.url || firstImageFrom(contentHtml, '');
-
-        const card = document.createElement('article');
-        card.className = 'card';
-        card.innerHTML = `
-            ${thumb ? `<a href="${href}" target="_blank" rel="noopener"><img src="${thumb}" alt="${title}"></a>` : ''}
-            <div class="meta">${date.toLocaleDateString(undefined, { year:'numeric', month:'short', day:'numeric' })}
-            ${labelTerms.length ? ' · ' + labelTerms.map(l => `<a href="?label=${encodeURIComponent(l)}">#${l}</a>`).join(' ') : ''}
-            </div>
-            <a class="title" href="${href}" target="_blank" rel="noopener">${title}</a>
-            <div class="excerpt">${excerpt || ''}</div>
-            <div><a class="btn" href="${href}" target="_blank" rel="noopener">Read on Blogger →</a></div>
-        `;
-        postsEl.appendChild(card);
-      });
-
-      // Basic pager text — Blogger doesn't return total count here, so we just reflect the range
-      pageInfo.textContent = `Showing ${startIndex}–${startIndex + entries.length - 1}` + (label ? ` · label: ${label}` : '');
-    }
-
-    // Pager buttons
-    function refresh(){ loadBloggerFeed({ label, startIndex }); }
-    prevBtn.addEventListener('click', () => { startIndex = Math.max(1, startIndex - PAGE_SIZE); refresh(); });
-    nextBtn.addEventListener('click', () => { startIndex = startIndex + PAGE_SIZE; refresh(); });
-
-    // Kick off
-    loadBloggerFeed({ label, startIndex });
-  </script>
+  <script src="assets/js/app.js"></script>
 </body>
 </html>
